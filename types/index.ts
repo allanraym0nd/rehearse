@@ -1,5 +1,6 @@
 export type InterviewType = 'system-design' | 'coding'
 export type InterviewStatus = 'in-progress' |  'completed' | 'abandoned'
+// export type userRole = 'ai' | 'user'
 
 export interface Interview {
   id: string;

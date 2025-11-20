@@ -48,11 +48,11 @@
 }
 
 @theme {
-  --font-family-sans: 'Geist', 'Inter', system-ui, sans-serif;
-  --font-family-mono: 'Geist Mono', monospace;
+  /* These reference the variables created by .variable */
+  --font-family-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-family-mono: var(--font-geist-mono), monospace;
   
   --max-width-container: 1200px;
-  
   --transition-duration-default: 200ms;
 }
 

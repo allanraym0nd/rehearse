@@ -7,3 +7,4 @@ export function cn(...inputs:ClassValue[]) {
 }
 
 // basically just prevent confilcts in tailwind classes and falsy values on classes 
+// whats w the spread operator ? 
