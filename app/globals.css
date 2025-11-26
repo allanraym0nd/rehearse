@@ -2,73 +2,92 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 9%;
+    --color-background: 0 0% 100%;
+    --color-foreground: 0 0% 9%;
+    --color-card: 0 0% 100%;
+    --color-card-foreground: 0 0% 9%;
+    --color-popover: 0 0% 100%;
+    --color-popover-foreground: 0 0% 9%;
+    --color-primary: 0 0% 9%;
+    --color-primary-foreground: 0 0% 98%;
+    --color-secondary: 0 0% 96%;
+    --color-secondary-foreground: 0 0% 9%;
+    --color-muted: 0 0% 96%;
+    --color-muted-foreground: 0 0% 45%;
+    --color-accent: 0 0% 96%;
+    --color-accent-foreground: 0 0% 9%;
+    --color-destructive: 0 84% 60%;
+    --color-destructive-foreground: 0 0% 98%;
+    --color-border: 0 0% 90%;
+    --color-input: 0 0% 90%;
+    --color-ring: 0 0% 9%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 0 0% 4%; /* #0a0a0a */
-    --foreground: 0 0% 89%;
-    --card: 0 0% 7%; /* #111 */
-    --card-foreground: 0 0% 89%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 89%;
-    --primary: 0 0% 89%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 20%; /* #333 */
-    --secondary-foreground: 0 0% 89%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 58%;
-    --accent: 0 0% 20%;
-    --accent-foreground: 0 0% 89%;
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 89%;
-    --border: 0 0% 20%; /* #333 */
-    --input: 0 0% 20%;
-    --ring: 0 0% 89%;
+    --color-background: 0 0% 4%; /* #0a0a0a */
+    --color-foreground: 0 0% 89%;
+    --color-card: 0 0% 7%; /* #111 */
+    --color-card-foreground: 0 0% 89%;
+    --color-popover: 0 0% 7%;
+    --color-popover-foreground: 0 0% 89%;
+    --color-primary: 0 0% 89%;
+    --color-primary-foreground: 0 0% 9%;
+    --color-secondary: 0 0% 20%; /* #333 */
+    --color-secondary-foreground: 0 0% 89%;
+    --color-muted: 0 0% 20%;
+    --color-muted-foreground: 0 0% 58%;
+    --color-accent: 0 0% 20%;
+    --color-accent-foreground: 0 0% 89%;
+    --color-destructive: 0 62% 50%;
+    --color-destructive-foreground: 0 0% 89%;
+    --color-border: 0 0% 20%; /* #333 */
+    --color-input: 0 0% 20%;
+    --color-ring: 0 0% 89%;
   }
 }
 
 @theme {
-  /* These reference the variables created by .variable */
-  --font-family-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-family-mono: var(--font-geist-mono), monospace;
+  --color-background: hsl(var(--color-background));
+  --color-foreground: hsl(var(--color-foreground));
+  --color-card: hsl(var(--color-card));
+  --color-card-foreground: hsl(var(--color-card-foreground));
+  --color-popover: hsl(var(--color-popover));
+  --color-popover-foreground: hsl(var(--color-popover-foreground));
+  --color-primary: hsl(var(--color-primary));
+  --color-primary-foreground: hsl(var(--color-primary-foreground));
+  --color-secondary: hsl(var(--color-secondary));
+  --color-secondary-foreground: hsl(var(--color-secondary-foreground));
+  --color-muted: hsl(var(--color-muted));
+  --color-muted-foreground: hsl(var(--color-muted-foreground));
+  --color-accent: hsl(var(--color-accent));
+  --color-accent-foreground: hsl(var(--color-accent-foreground));
+  --color-destructive: hsl(var(--color-destructive));
+  --color-destructive-foreground: hsl(var(--color-destructive-foreground));
+  --color-border: hsl(var(--color-border));
+  --color-input: hsl(var(--color-input));
+  --color-ring: hsl(var(--color-ring));
   
-  --max-width-container: 1200px;
-  --transition-duration-default: 200ms;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--color-border);
   }
+  
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Vercel-style smooth transitions */
 @layer utilities {
   .transition-default {
-    @apply transition-all duration-200 ease-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
   }
 }
