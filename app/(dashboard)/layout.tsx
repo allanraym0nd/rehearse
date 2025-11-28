@@ -1,7 +1,7 @@
 import { TopBar } from "@/components/layout/top-bar";
 import { SideBar } from "@/components/layout/sidebar";
 
-export function DashboardLayout({children,}: {children: React.ReactNode}){
+export default function DashboardLayout({children,}: {children: React.ReactNode}){
     return (
         <div className="min-h-screen">
             <TopBar />
