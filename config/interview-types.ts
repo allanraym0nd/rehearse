@@ -1,23 +1,22 @@
 export const INTERVIEW_TYPES = {
-    system_design: {
-        title:'System Design',
-        description: 'Design Scalable Systems',
-        icon: '📊',
-        topics: [
-            'Design Twitter',
-            'Design Instagram',
-            'Design Netflix',
-            'Design Uber',
-            'Design URL Shortener',
-            'Design Rate Limiter',
-            'Design Web Crawler',
-            'Design Chat Application',
-            'Design Notification System',
-            'Design File Storage System',
-
-        ]
-    },
-    behavioral: {
+  system_design: {
+    title: 'System Design',
+    description: 'Design scalable systems',
+    icon: '📊',
+    topics: [
+      'Design Twitter',
+      'Design Instagram',
+      'Design Netflix',
+      'Design Uber',
+      'Design URL Shortener',
+      'Design Rate Limiter',
+      'Design Web Crawler',
+      'Design Chat Application',
+      'Design Notification System',
+      'Design File Storage System',
+    ],
+  },
+  behavioral: {
     title: 'Behavioral',
     description: 'Practice behavioral questions',
     icon: '💬',
@@ -49,4 +48,4 @@ export const INTERVIEW_TYPES = {
   },
 } as const
 
-export type INTERVIEW_TYPES = keyof typeof INTERVIEW_TYPES
+export type InterviewType = keyof typeof INTERVIEW_TYPES
