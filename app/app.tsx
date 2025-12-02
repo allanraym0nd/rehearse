@@ -1,10 +1,8 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
-
 export default function HomePage() {
   return (
-    <>
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="max-w-2xl text-center space-y-8">
         <h1 className="text-6xl font-semibold tracking-tight">
@@ -23,6 +21,5 @@ export default function HomePage() {
         </div>
       </div>
     </div>
-    </>
   )
 }
