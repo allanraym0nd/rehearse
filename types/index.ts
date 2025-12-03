@@ -1,4 +1,4 @@
-export type InterviewType = 'system-design' | 'coding'
+export type InterviewType = 'system_design' | 'coding' | 'behavioral'
 export type InterviewStatus = 'in-progress' |  'completed' | 'abandoned'
 // export type userRole = 'ai' | 'user'
 
