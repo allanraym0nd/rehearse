@@ -1,6 +1,6 @@
 import { InterviewType } from "@/types";
 
-export function getSystemPrompt(type:InterviewType,topic: string): string {
+export default function getSystemPrompt(type:InterviewType,topic: string): string {
 
     const basePrompt = ` You are an experienced technical interviewer conducting a ${type} interview.
 
@@ -22,7 +22,7 @@ export function getSystemPrompt(type:InterviewType,topic: string): string {
 
     `
 
-    if(type === 'system-design'){
+    if(type === 'system_design'){
         return basePrompt + `
         System Design specifics: 
         - Focus on scalability, reliability and performance
@@ -33,7 +33,7 @@ export function getSystemPrompt(type:InterviewType,topic: string): string {
         `
     }
 
-      if (type === 'Behavioral') {
+      if (type === 'behavioral') {
 
     return basePrompt + `
         Behavioral specifics:
