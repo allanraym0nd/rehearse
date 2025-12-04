@@ -220,54 +220,57 @@ export default function InterviewPage() {
     }
   }
 
-  if (!interview) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading interview...</p>
-      </div>
-    )
-  }
-
+  // Add loading/error states at the bottom, BEFORE the return
+if (!interview) {
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold">{interview.topic}</h1>
-          <p className="text-muted-foreground capitalize">{interview.type.replace('_', ' ')} Interview</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-muted-foreground">Loading interview...</p>
+    </div>
+  )
+}
 
-        {/* Main Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Canvas placeholder (future) */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-card border border-border rounded-lg h-96 flex items-center justify-center">
-              <p className="text-muted-foreground">Canvas area (coming soon)</p>
-            </div>
+return (
+  <div className="min-h-screen bg-background p-6">
+    <div className="max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold">{interview.topic}</h1>
+        <p className="text-muted-foreground capitalize">
+          {interview?.type?.replace('_', ' ') || 'Loading'} Interview
+        </p>
+      </div>
 
-            {/* Voice Controls */}
-            <VoiceControls
-              isListening={isListening}
-              isSpeaking={isSpeaking}
-              transcript={transcript}
-              duration={duration}
-              maxDuration={MAX_DURATION}
-              onStartListening={startListening}
-              onStopListening={stopListening}
-              onStopSpeaking={stopSpeaking}
-              onEndInterview={handleEndInterview}
-            />
+      {/* Main Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left: Canvas placeholder (future) */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-card border border-border rounded-lg h-96 flex items-center justify-center">
+            <p className="text-muted-foreground">Canvas area (coming soon)</p>
           </div>
 
-          {/* Right: AI Avatar + Transcript */}
-          <div className="space-y-6">
-            <AiAvatar isSpeaking={isSpeaking} />
-            <div className="h-[500px]">
-              <TranscriptPanel messages={messages} />
-            </div>
+          {/* Voice Controls */}
+          <VoiceControls
+            isListening={isListening}
+            isSpeaking={isSpeaking}
+            transcript={transcript}
+            duration={duration}
+            maxDuration={MAX_DURATION}
+            onStartListening={startListening}
+            onStopListening={stopListening}
+            onStopSpeaking={stopSpeaking}
+            onEndInterview={handleEndInterview}
+          />
+        </div>
+
+        {/* Right: AI Avatar + Transcript */}
+        <div className="space-y-6">
+          <AiAvatar isSpeaking={isSpeaking} />
+          <div className="h-[500px]">
+            <TranscriptPanel messages={messages} />
           </div>
         </div>
       </div>
     </div>
-  )
+  </div>
+)
 }

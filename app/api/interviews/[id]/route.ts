@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
-import { NextResponse } from "next/server";
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
 export async function GET(
   request: Request,
@@ -26,11 +26,12 @@ export async function GET(
 
   return NextResponse.json(interview)
 }
+
 export async function PATCH(
-    request: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
-    const supabase = await createClient()
+  const supabase = await createClient()
   
   const { data: { user } } = await supabase.auth.getUser()
   
@@ -39,8 +40,8 @@ export async function PATCH(
   }
 
   const updates = await request.json()
-    
-    const { data: interview, error } = await supabase
+
+  const { data: interview, error } = await supabase
     .from('interviews')
     .update(updates)
     .eq('id', params.id)
@@ -48,10 +49,9 @@ export async function PATCH(
     .select()
     .single()
 
-    if (error) {
+  if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
   return NextResponse.json(interview)
-
 }
