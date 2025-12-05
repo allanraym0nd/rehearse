@@ -1,36 +1,41 @@
-import { createClient } from "@/lib/supabase/server";
-import {NextResponse} from "next/server"
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
-export default async function POST(request:Request) {
-    const supabase = await createClient() 
+export async function POST(request: Request) {
+  const supabase = await createClient()
+  
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
 
-    const {data: {user}} = await supabase.auth.getUser()
-    if(!user){
-        return NextResponse.json({error: 'Unauthorized'}, {status:401})
-    }
+  const { type, topic } = await request.json()
+  console.log('Creating interview in DB:', { type, topic, user_id: user.id })  // ← Add logging
 
-    const {type,topic} = await request.json()
 
-    const {data: interview,error} = await supabase
+  const { data: interview, error } = await supabase
     .from('interviews')
     .insert({
-        user_id:user.id,
-        type,
-        topic,
-        status: 'in_progress'
+      user_id: user.id,
+      type,
+      topic,
+      status: 'in_progress',
     })
     .select()
     .single()
 
-    if(error) {
-        return NextResponse.json({error: error.message}, {status:500})
-    }
+    console.log('Supabase response:', { interview, error })
 
-    return NextResponse.json(interview)
-
+  if (error) {
+    console.error('Database error:', error)  // ← Add logging
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+  console.log('Returning interview:', interview)  // ← Add logging
+  return NextResponse.json(interview)
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const supabase = await createClient()
   
   const { data: { user } } = await supabase.auth.getUser()

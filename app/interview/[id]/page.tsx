@@ -23,7 +23,7 @@ interface Interview {
   started_at: string
 }
 
-const MAX_DURATION = 45 * 60 // 45 minutes in seconds
+const MAX_DURATION = 45 * 60 
 
 export default function InterviewPage() {
   const router = useRouter()
@@ -53,6 +53,8 @@ export default function InterviewPage() {
       try {
         const response = await fetch(`/api/interviews/${interviewId}`)
         const data = await response.json()
+        console.log('Fetched interview:', data)  
+        console.log('Topic:', data.topic)
         setInterview(data)
       } catch (error) {
         console.error('Failed to fetch interview:', error)
