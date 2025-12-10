@@ -212,17 +212,18 @@ export default function InterviewPage() {
         body: JSON.stringify({
           status: 'completed',
           duration_seconds: duration,
+          completed_at: new Date().toISOString()
         }),
       })
 
-      // Redirect to feedback page
+      
       router.push(`/interview/${interviewId}/feedback`)
     } catch (error) {
       console.error('Failed to end interview:', error)
     }
   }
 
-  // Add loading/error states at the bottom, BEFORE the return
+  
 if (!interview) {
   return (
     <div className="min-h-screen flex items-center justify-center">
