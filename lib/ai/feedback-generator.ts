@@ -47,7 +47,9 @@ export async function generateFeedback(
     "recommendations": [3-5 actionable next steps],
     "weak_areas": [2-4 topic keywords like "caching", "monitoring"]
     } 
-    Be specific and reference actual moments from the conversation. Rate honestly but constructively.`
+    Be specific and reference actual moments from the conversation. Rate honestly but constructively. 
+    IMPORTANT: Respond ONLY with valid JSON, no markdown formatting or code blocks.
+    `
 
     try { 
         const response = await fetch('/api/groq', {
@@ -75,6 +77,17 @@ export async function generateFeedback(
         }
 
         const feedback = JSON.parse(cleanedMessage)
+        console.log('Parsed feedback:', feedback)
+
+        if (!feedback.overall_score || 
+            !feedback.category_scores || 
+            !feedback.strengths || 
+            !feedback.improvements || 
+            !feedback.recommendations || 
+            !feedback.weak_areas) {
+          console.error('Invalid feedback structure:', feedback)
+          throw new Error('AI returned incomplete feedback')
+        }
         return feedback
     }catch(error){
      console.error('Failed to generate feedback:', error)

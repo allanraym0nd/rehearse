@@ -201,7 +201,7 @@ export default function FeedbackPage() {
               <div>
                 <div className="text-sm text-muted-foreground">Weak Areas</div>
                 <div className="text-lg font-semibold">
-                  {feedback.weak_areas.length}
+                  {feedback.weak_areas?.length || 0}
                 </div>
               </div>
               <div>
