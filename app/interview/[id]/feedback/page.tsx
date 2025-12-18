@@ -41,52 +41,67 @@ export default function FeedbackPage() {
     const [error,setError] = useState<string | null>(null)
 
 
-    useEffect(() => {
-        async function loadFeedback() {
-            try { 
-                // fetch interview details 
-                const interviewRes = await fetch(`/api/interviews/${interviewId}`)
-                const interviewData = await interviewRes.json()
+ 
+  useEffect(() => {
+    async function loadFeedback() {
+      try {
+        console.log('Loading feedback for interview:', interviewId)
+        
+        // Fetch interview details
+        const interviewRes = await fetch(`/api/interviews/${interviewId}`)
+        const interviewData = await interviewRes.json()
 
-                 if(interviewData.error) {
-                    throw new Error (interviewData.error)
-                 }
+        console.log('Interview data:', interviewData)
 
-                 setInterview(interviewData)
-
-                 //checking if feedback already exists
-                 const feedbackRes = await fetch(`/api/interviews/${interviewId}`)
-                 const existingFeedback = await feedbackRes.json()
-
-                 if(existingFeedback && !existingFeedback.error) {
-                    setFeedback(existingFeedback)
-                 }else {
-                    const feedbackRes = await fetch(`/api/feedback`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({interview_id: interviewId})
-                    })
-
-                    const newFeedback = await feedbackRes.json()
-
-                        if (newFeedback.error) {
-                            throw new Error(newFeedback.error)
-                        }
-
-                        setFeedback(newFeedback)
-                 }
-                
-            }catch(err: any){
-                console.error('Failed to load feedback:', err)
-                setError(err.message || 'Failed to load feedback')
-
-
-            }finally{
-                setIsLoading(false)
-            }
+        if (interviewData.error) {
+          throw new Error(interviewData.error)
         }
-        loadFeedback()
-    }, [interviewId])
+
+        setInterview(interviewData)
+
+        // Check if feedback already exists
+        const feedbackCheckRes = await fetch(`/api/feedback/${interviewId}`)
+        const existingFeedback = await feedbackCheckRes.json()
+
+        console.log('Existing feedback check:', existingFeedback)
+
+        if (existingFeedback && !existingFeedback.error) {
+          console.log('Using existing feedback')
+          setFeedback(existingFeedback)
+        } else {
+          // Generate new feedback
+          console.log('Generating new feedback...')
+          const feedbackRes = await fetch('/api/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ interview_id: interviewId }),
+          })
+
+          const newFeedback = await feedbackRes.json()
+          console.log('New feedback received:', newFeedback)
+
+          if (newFeedback.error) {
+            throw new Error(newFeedback.error)
+          }
+
+          // Validate feedback has required fields before setting
+          if (!newFeedback.overall_score || !newFeedback.category_scores) {
+            console.error('Incomplete feedback received:', newFeedback)
+            throw new Error('Incomplete feedback data')
+          }
+
+          setFeedback(newFeedback)
+        }
+      } catch (err: any) {
+        console.error('Failed to load feedback:', err)
+        setError(err.message || 'Failed to load feedback')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadFeedback()
+  }, [interviewId])
 
     const formatDuration = (seconds: number) => {
         const mins = Math.floor(seconds/60)
@@ -181,38 +196,39 @@ export default function FeedbackPage() {
           </CardContent>
         </Card>
 
-        {/* Interview Stats */}
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold mb-4">Interview Statistics</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <div className="text-sm text-muted-foreground">Duration</div>
-                <div className="text-lg font-semibold">
-                  {formatDuration(interview.duration_seconds)}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Date</div>
-                <div className="text-lg font-semibold">
-                  {new Date(interview.created_at).toLocaleDateString()}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Weak Areas</div>
-                <div className="text-lg font-semibold">
-                  {feedback.weak_areas?.length || 0}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Score</div>
-                <div className="text-lg font-semibold">
-                  {feedback.overall_score.toFixed(1)}/10
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      // Replace the Interview Stats section with this safer version:
+{/* Interview Stats */}
+<Card>
+  <CardContent className="p-6">
+    <h3 className="text-xl font-semibold mb-4">Interview Statistics</h3>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div>
+        <div className="text-sm text-muted-foreground">Duration</div>
+        <div className="text-lg font-semibold">
+          {interview?.duration_seconds ? formatDuration(interview.duration_seconds) : 'N/A'}
+        </div>
+      </div>
+      <div>
+        <div className="text-sm text-muted-foreground">Date</div>
+        <div className="text-lg font-semibold">
+          {interview?.created_at ? new Date(interview.created_at).toLocaleDateString() : 'N/A'}
+        </div>
+      </div>
+      <div>
+        <div className="text-sm text-muted-foreground">Weak Areas</div>
+        <div className="text-lg font-semibold">
+          {feedback?.weak_areas?.length || 0}
+        </div>
+      </div>
+      <div>
+        <div className="text-sm text-muted-foreground">Score</div>
+        <div className="text-lg font-semibold">
+          {feedback?.overall_score ? feedback.overall_score.toFixed(1) : 'N/A'}/10
+        </div>
+      </div>
+    </div>
+  </CardContent>
+</Card>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
