@@ -50,9 +50,9 @@ export async function generateFeedback(
     Be specific and reference actual moments from the conversation. Rate honestly but constructively. 
     IMPORTANT: Respond ONLY with valid JSON, no markdown formatting or code blocks.
     `
-
+ const baseURL  = process.env.NEXT_PUBLIC_SITE_URL
     try { 
-        const response = await fetch('/api/groq', {
+        const response = await fetch(`${baseURL}/api/groq`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
