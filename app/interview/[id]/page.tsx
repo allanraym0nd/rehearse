@@ -8,6 +8,7 @@ import { TranscriptPanel } from '@/components/interview/transcript-panel'
 import { AiAvatar } from '@/components/interview/ai-avatar'
 import getSystemPrompt from '@/lib/groq/prompt'
 import { InterviewType } from '@/config/interview-types'
+import { Button } from '@/components/ui/button'
 
 interface Message {
   role: 'ai' | 'user'
@@ -23,7 +24,7 @@ interface Interview {
   started_at: string
 }
 
-const MAX_DURATION = 45 * 60 // 45 minutes in seconds
+const MAX_DURATION = 45 * 60 
 
 export default function InterviewPage() {
   const router = useRouter()
@@ -53,6 +54,8 @@ export default function InterviewPage() {
       try {
         const response = await fetch(`/api/interviews/${interviewId}`)
         const data = await response.json()
+        console.log('Fetched interview:', data)  
+        console.log('Topic:', data.topic)
         setInterview(data)
       } catch (error) {
         console.error('Failed to fetch interview:', error)
@@ -210,64 +213,91 @@ export default function InterviewPage() {
         body: JSON.stringify({
           status: 'completed',
           duration_seconds: duration,
+          completed_at: new Date().toISOString()
         }),
       })
 
-      // Redirect to feedback page
+      
       router.push(`/interview/${interviewId}/feedback`)
     } catch (error) {
       console.error('Failed to end interview:', error)
     }
   }
 
-  if (!interview) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading interview...</p>
-      </div>
-    )
-  }
-
+  
+if (!interview) {
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold">{interview.topic}</h1>
-          <p className="text-muted-foreground capitalize">{interview.type.replace('_', ' ')} Interview</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-muted-foreground">Loading interview...</p>
+    </div>
+  )
+}
 
-        {/* Main Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Canvas placeholder (future) */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-card border border-border rounded-lg h-96 flex items-center justify-center">
-              <p className="text-muted-foreground">Canvas area (coming soon)</p>
-            </div>
+return (
+  <div className="min-h-screen bg-background p-6">
+    <div className="max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold">{interview.topic}</h1>
+        <p className="text-muted-foreground capitalize">
+          {interview?.type?.replace('_', ' ') || 'Loading'} Interview
+        </p>
+      </div>
 
-            {/* Voice Controls */}
-            <VoiceControls
-              isListening={isListening}
-              isSpeaking={isSpeaking}
-              transcript={transcript}
-              duration={duration}
-              maxDuration={MAX_DURATION}
-              onStartListening={startListening}
-              onStopListening={stopListening}
-              onStopSpeaking={stopSpeaking}
-              onEndInterview={handleEndInterview}
-            />
-          </div>
+      {/* Main Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Left: Canvas placeholder (future) */}
+<div className="lg:col-span-2 space-y-6">
+  <div className="bg-card border border-border rounded-lg h-96 flex items-center justify-center">
+    <p className="text-muted-foreground">Canvas area (coming soon)</p>
+  </div>
 
-          {/* Right: AI Avatar + Transcript */}
-          <div className="space-y-6">
-            <AiAvatar isSpeaking={isSpeaking} />
-            <div className="h-[500px]">
-              <TranscriptPanel messages={messages} />
-            </div>
+  {/* Voice Controls */}
+  <VoiceControls
+    isListening={isListening}
+    isSpeaking={isSpeaking}
+    transcript={transcript}
+    duration={duration}
+    maxDuration={MAX_DURATION}
+    onStartListening={startListening}
+    onStopListening={stopListening}
+    onStopSpeaking={stopSpeaking}
+    onEndInterview={handleEndInterview}
+  />
+
+  {/* End Interview Button */}
+  <button
+  onClick={handleEndInterview}
+  style={{
+    width: '100%',
+    padding: '12px',
+    backgroundColor: '#ef4444',
+    color: 'white',
+    borderRadius: '8px',
+    fontSize: '16px',
+    fontWeight: '600',
+    border: 'none',
+    cursor: 'pointer',
+  }}
+  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
+  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ef4444'}
+>
+  End Interview
+</button>
+</div>
+
+   
+
+      
+        {/* Right: AI Avatar + Transcript */}
+        <div className="space-y-6">
+          <AiAvatar isSpeaking={isSpeaking} />
+          <div className="h-[500px]">
+            <TranscriptPanel messages={messages} />
           </div>
         </div>
       </div>
     </div>
-  )
+  </div>
+)
 }

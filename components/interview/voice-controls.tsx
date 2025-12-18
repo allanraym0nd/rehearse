@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
+import { Mic, MicOff, VolumeX } from 'lucide-react'
 
 interface VoiceControlsProps {
   isListening: boolean
