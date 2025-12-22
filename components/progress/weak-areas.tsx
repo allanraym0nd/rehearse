@@ -33,7 +33,7 @@ export function WeakAreas({weakAreas}: WeakAreasProps) {
         </p>
       </CardHeader>
       <CardContent className="space-y-3">
-        {weakAreas.map((area, index) => (
+        {weakAreas.filter(area => area.area).map((area, index) => (
           <div
             key={index}
             className="p-3 bg-secondary/50 rounded-lg border-l-4 border-l-red-500"
