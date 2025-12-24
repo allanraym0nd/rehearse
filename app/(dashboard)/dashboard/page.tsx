@@ -41,7 +41,7 @@ export default async function DashboardPage() {
   const totalInterviews = interviews?.length || 0
   const completedInterviews = interviews?.filter(i => i.status === 'completed') || []
   
-  
+  // Calculate total duration
   const totalDuration = completedInterviews.reduce((acc, curr) => {
     return acc + (curr.duration_seconds || 0)
   }, 0)
@@ -49,11 +49,41 @@ export default async function DashboardPage() {
   const totalHours = Math.floor(totalDuration / 3600)
   const totalMinutes = Math.floor((totalDuration % 3600) / 60)
   
-
-  const averageScore = 0 // Placeholder
+  // Get feedback scores
+  const interviewIds = completedInterviews.map(i => i.id)
+  const { data: feedbacks } = await supabase
+    .from('feedback')
+    .select('overall_score, created_at')
+    .in('interview_id', interviewIds)
+    .order('created_at', { ascending: false })
   
- 
-  const currentStreak = 0 // Placeholder
+  // Calculate average score
+  const scores = feedbacks?.map(f => f.overall_score).filter(s => s != null) || []
+  const averageScore = scores.length > 0 
+    ? (scores.reduce((sum, s) => sum + s, 0) / scores.length).toFixed(1)
+    : 0
+  
+  // Calculate streak (simplified - consecutive days with interviews)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  
+  let currentStreak = 0
+  const sortedInterviews = [...completedInterviews].sort((a, b) => 
+    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  )
+  
+  for (let i = 0; i < sortedInterviews.length; i++) {
+    const interviewDate = new Date(sortedInterviews[i].created_at)
+    interviewDate.setHours(0, 0, 0, 0)
+    
+    const daysDiff = Math.floor((today.getTime() - interviewDate.getTime()) / (1000 * 60 * 60 * 24))
+    
+    if (daysDiff === currentStreak) {
+      currentStreak++
+    } else if (daysDiff > currentStreak) {
+      break
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -84,7 +114,7 @@ export default async function DashboardPage() {
         />
         <StatCard
           label="Day Streak"
-          value={currentStreak || '—'}
+          value={currentStreak > 0 ? `${currentStreak} 🔥` : '—'}
           icon={<Flame className="h-8 w-8" />}
         />
       </div>
